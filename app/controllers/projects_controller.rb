@@ -2,13 +2,11 @@ class ProjectsController < ApplicationController
 	before_action :set_project, only: [:show, :edit, :update, :destroy, :add_member, :remove_member]
 
 	def index
-		authorize Project
 		@projects = Project.all
 	end
 
 	def new
 		@project = Project.new
-		authorize @project
 	end
 
 	def show		
@@ -18,7 +16,7 @@ class ProjectsController < ApplicationController
 	end
 
 	def edit
-		authorize @project		
+		@project		
 	end
 
 	# def edit
@@ -43,7 +41,6 @@ class ProjectsController < ApplicationController
 	end		
 
 	def destroy
-	  authorize @project			
 		@project.destroy
 		redirect_to projects_path(@project)
 	end

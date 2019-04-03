@@ -11,8 +11,10 @@
 		<td><%= @project.title %></td>
 		<td><%= @project.description %></td>
 		<td><%= link_to 'Edit', edit_project_path(@project) if policy(@project).edit? %></td>
-		<td><%= link_to 'Destroy', @project, data: {confirm: 'Are you sure?'},
+		<% if policy(@project).destroy? %>
+			<td><%= link_to 'Destroy', @project, data: {confirm: 'Are you sure?'},
 						:method => :delete %></td>
+		<% end %>
 	</tr>
 
 </table>
@@ -29,7 +31,7 @@
 				<td><%= user.name %></td>
 				<td><%= user.user_type %></td>
 				<td><%= user.email %></td>
-				<% if user.user_type != 'Manager' %>	
+				<%  if policy(@project).remove_member? and user.id != current_user.id %>	
 				<td><%= link_to 'Remove User', remove_project_path(@project, user), data: {confirm: 'Are you sure?'},
 						:method => :delete %></td>
 				<%end %>	
@@ -37,18 +39,19 @@
 		<% end %>
 </table>
 
+	<% if policy(@project).add_member?  %>
 		<%= form_for @project, url: {action: "add_member"} do |form| %>
-			
 			<%= fields_for (@user_project) do |pb| %>
-			<div class="field">
-				<%= pb.label 'All Users' %>
-				<%= collection_select(:users, :id,  @all_users, :id, :name_and_type, {}, {multiple:  true}) %> 
-			</div>
+				<div class="field">
+					<%= pb.label 'All Users' %>
+					<%= collection_select(:users, :id,  @all_users, :id, :name_and_type, {}, {multiple:  true}) %> 
+				</div>
 			<% end %>		
 			<%=submit_tag "Add", :class => "submit"%>
-		<%end%>	
-
-
-
+		<%end%>
+	<%end%>
+	
 
 <%= link_to 'Back', projects_path %>
+
+<%= link_to 'Bugs', project_bugs_path(@project) %>

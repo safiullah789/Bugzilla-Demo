@@ -7,9 +7,9 @@ Rails.application.routes.draw do
   		patch 'add_member'
   		delete 'remove_member/:user_id' => 'projects#remove_member', as: :remove
   		end
+  	resources :bugs
   	end
-
-
+  	
  resources :welcome
   root 'welcome#index'
 

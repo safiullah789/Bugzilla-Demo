@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   has_many :user_projects, dependent: :destroy
   has_many :projects, through: :user_projects  
+  has_many :bugs
 
   def name_and_type
 	"#{name} (#{user_type})"

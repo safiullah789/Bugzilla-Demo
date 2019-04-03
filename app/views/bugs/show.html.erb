@@ -1,0 +1,31 @@
+
+<h2> Bug Details </h2>
+
+<table cellspacing="5" cellpadding="5">
+	<tr>
+		<th> Title </th>
+		<th> Type </th>
+		<th> Status </th>
+		<th> Deadline </th>
+		<th> Screenshot </th>
+	</tr>
+
+	<tr>
+		<td><%= @bug.title %></td>
+		<td><%= @bug.type %></td>
+		<td><%= @bug.status %></td>
+		<td><%= @bug.deadline %></td>
+		<td><%= @bug.screenshot %></td>
+
+		<td><%= link_to 'Edit', edit_project_bug_path(@project, @bug) %></td>
+		<td><%= link_to 'Destroy', project_bug_path(@project, @bug), data: {confirm: 'Are you sure?'},
+						:method => :delete %></td>
+		<% end %>
+	</tr>
+</table>
+
+<%= link_to 'Back', project_bugs_path(@project) %>
+
+
+
+
