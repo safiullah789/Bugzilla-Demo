@@ -1,0 +1,54 @@
+
+<h2> Project Details </h2>
+
+<table cellspacing="5" cellpadding="5">
+	<tr>
+		<th> Project Title </th>
+		<th> Description </th>
+	</tr>
+
+	<tr>
+		<td><%= @project.title %></td>
+		<td><%= @project.description %></td>
+		<td><%= link_to 'Edit', edit_project_path(@project) if policy(@project).edit? %></td>
+		<td><%= link_to 'Destroy', @project, data: {confirm: 'Are you sure?'},
+						:method => :delete %></td>
+	</tr>
+
+</table>
+
+<table cellspacing="5" cellpadding="5">
+	<h2>Member(s) of the project </h2>
+	<tr>
+		<th> User Name</th>
+		<th> User Type </th>
+		<th> User Email ID </th>
+	</tr>
+		<% @project.users.each do |user|%>
+			<tr>
+				<td><%= user.name %></td>
+				<td><%= user.user_type %></td>
+				<td><%= user.email %></td>
+				<% if user.user_type != 'Manager' %>	
+				<td><%= link_to 'Remove User', remove_project_path(@project, user), data: {confirm: 'Are you sure?'},
+						:method => :delete %></td>
+				<%end %>	
+			</tr>
+		<% end %>
+</table>
+
+		<%= form_for @project, url: {action: "add_member"} do |form| %>
+			
+			<%= fields_for (@user_project) do |pb| %>
+			<div class="field">
+				<%= pb.label 'All Users' %>
+				<%= collection_select(:users, :id,  @all_users, :id, :name_and_type, {}, {multiple:  true}) %> 
+			</div>
+			<% end %>		
+			<%=submit_tag "Add", :class => "submit"%>
+		<%end%>	
+
+
+
+
+<%= link_to 'Back', projects_path %>
