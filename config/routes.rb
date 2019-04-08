@@ -6,10 +6,18 @@ Rails.application.routes.draw do
   	member do
   		patch 'add_member'
   		delete 'remove_member/:user_id' => 'projects#remove_member', as: :remove
-  		end
-  	resources :bugs
   	end
-  	
+  	resources :bugs do
+      member do
+         patch 'assign', to: 'bugs#assign'
+    end
+  end
+  end
+
+  get 'edit_status', to: 'bugs#edit_status'
+
+
+
  resources :welcome
   root 'welcome#index'
 

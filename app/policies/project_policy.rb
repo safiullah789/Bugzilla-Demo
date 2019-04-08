@@ -11,47 +11,52 @@ class ProjectPolicy < ApplicationPolicy
   	# @user.user_type != 'Developer'
   end
 
-  def new?	
+  def new?
   	@user.user_type == 'Manager'
   end
 
+
   def show?
-  	if @user.user_type == 'Developer'   	
+  	if @user.user_type == 'Developer'
   		@project.users.include?(@user)
-  	else 
-  		return true 
+  	else
+  		return true
   	end
   end
 
   def edit?
-	  @user_Obj = @project.users.where(id: @project.users.ids, user_type: 'Manager')
-	  @usId = @user_Obj.ids[0]
-    return @usId == @user.id
+    if @user.user_type == 'Manager'
+      @project.users.include?(@user)
+    else
+      return false
+    end
   end
 
+
   def destroy?
-  	@user_Obj = @project.users.where(id: @project.users.ids, user_type: 'Manager')
-	  @usId = @user_Obj.ids[0]
-    return @usId == @user.id
+  	if @user.user_type == 'Manager'
+      @project.users.include?(@user)
+    else
+      return false
+    end
   end
 
   def add_member?
-  	@user_Obj = @project.users.where(id: @project.users.ids, user_type: 'Manager')
-	  @usId = @user_Obj.ids[0]
-    return @usId == @user.id
+  	if @user.user_type == 'Manager'
+      @project.users.include?(@user)
+    else
+      return false
+    end
   end
 
   def remove_member?
-		@user_Obj = @project.users.where(id: @project.users.ids, user_type: 'Manager')
-	  @usId = @user_Obj.ids[0]	
-    return @usId == @user.id
+		if @user.user_type == 'Manager'
+      @project.users.include?(@user)
+    else
+      return false
+    end
   end
 
-  # class Scope < Scope
-  #   def resolve
-  #     scope.all
-  #   end
-  # end
 
 
 end

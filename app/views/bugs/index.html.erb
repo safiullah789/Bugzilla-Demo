@@ -2,19 +2,24 @@
 <h1> List of Bugs </h1>
 <table cellpadding="5">
 	<tr>
-		<th> Bugs </th>
+		<th> <h3> Bugs</h3> </th>
 	</tr>
 	<% if @bugs.present? %>
 		<% @bugs.each do |bug| %>
 				<tr>
-					<td> <%= bug.title %> </td>
-			    <td><%= link_to 'Show Details', project_bug_path(@project, bug) %></td> 
-					<td><%= link_to 'Edit', edit_project_bug_path(@project, bug)%></td>
-					<td><%= link_to 'Destroy', project_bug_path(@project, bug), data: {confirm: 'Are you sure?'},
-														 :method => :delete %></td>				
-				</tr>			
+					<td><%= bug.title %> </td>
+			    <td><%= link_to 'Show Details', project_bug_path(@project, bug) if policy(bug).show? %></td>
+			    <td><%= link_to 'Assign Me', assign_project_bug_path(@project, bug), :method => :patch  if policy(bug).assign?%></td>
+					<td><%= link_to 'Edit', edit_project_bug_path(@project, bug) if policy(bug).edit? %></td>
+					<% if policy(bug).destroy? %>
+						<td><%= link_to 'Destroy', project_bug_path(@project, bug), data: {confirm: 'Are you sure?'},
+                           :method => :delete %></td>
+          <% end %>
+				</tr>
 		<% end %>
 	<% end %>
 </table>
 
-<%= link_to 'Add new bug', new_project_bug_path(@project)%> 
+<%= link_to 'Report a bug', new_project_bug_path(@project) if policy(Bug).new? %><br/>
+
+<%= link_to 'Back', project_path(@project) if policy(@project).show?%>

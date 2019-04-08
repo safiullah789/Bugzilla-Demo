@@ -1,31 +1,76 @@
 
 <h2> Bug Details </h2>
 
-<table cellspacing="5" cellpadding="5">
-	<tr>
-		<th> Title </th>
+  <table cellspacing="5" cellpadding="5">
+	 <tr>
+	   <th>Title </th>
 		<th> Type </th>
-		<th> Status </th>
+    <th> Status </th>
 		<th> Deadline </th>
-		<th> Screenshot </th>
+		<th> Assigned To </th>
 	</tr>
 
-	<tr>
-		<td><%= @bug.title %></td>
-		<td><%= @bug.type %></td>
-		<td><%= @bug.status %></td>
-		<td><%= @bug.deadline %></td>
-		<td><%= @bug.screenshot %></td>
+	 <tr>
+		<td><%= @bug.title %>      </td>
+		<td><%= @bug.bug_type %>   </td>
 
-		<td><%= link_to 'Edit', edit_project_bug_path(@project, @bug) %></td>
-		<td><%= link_to 'Destroy', project_bug_path(@project, @bug), data: {confirm: 'Are you sure?'},
-						:method => :delete %></td>
+    <% if policy(@bug).edit_status? %>
+      <p><strong> Status </strong>  </p>
+        <% if @bug.bug_type == 'Bug' %>
+          <td id="status_list" data-bug_id= "<%= @bug.id%>" onchange="getSelectValue();">
+            <%= select_tag 'status' , options_for_select(['New', 'Started', 'Resolved'], @bug.bug_status) %>
+          </td>
+        <% else %>
+          <td id="status_list" data-bug_id= "<%= @bug.id%>" onchange="getSelectValue();" >
+            <%= select_tag 'status' , options_for_select(['New', 'Started', 'Resolved'], @bug.bug_status) %>
+        </td>
+        <% end %>
+
+      <% else %>
+      <td> <%= @bug.bug_status %> </td>
+      <% end %>
+
+    <td><%= @bug.deadline %>   </td>
+
+		<% if @bug.dev_id? %>
+			<td><%= User.find(@bug.dev_id).name %>
+		<% else %>
+			<td>Un-Assigned </td>
 		<% end %>
-	</tr>
-</table>
+
+		<td><%= link_to 'Edit', edit_project_bug_path(@project, @bug) if policy(@bug).edit? %></td>
+		<% if policy(@bug).destroy? %>
+			<td><%= link_to 'Destroy', project_bug_path(@project, @bug), data: {confirm: 'Are you sure?'},
+   			                     :method => :delete %></td>
+    <% end %>
+    <td><%= link_to 'Assign Me', assign_project_bug_path(@project, @bug), :method => :patch  if policy(@bug).assign?%></td>
+
+	 </tr>
+  </table>
+
+<h3> Screenshot </h3>
+<%= image_tag @bug.screenshot_url(:thumb) if @bug.screenshot? %> <br/><br/>
+
+
+<script>
+  function getSelectValue(){
+    var selectedValue = document.getElementById("status").value;
+    console.log(selectedValue);
+    var bug_id = $("#status_list").attr("data-bug_id")
+    $.ajax({
+      type: "GET",
+      url: "/edit_status",
+      data: {"data" : selectedValue, "id" : bug_id},
+      success:function(response){
+        alert(response["message"]);
+      },
+      error:function(response){
+        alert(response["error"]);
+      }
+    })
+  }
+
+</script>
 
 <%= link_to 'Back', project_bugs_path(@project) %>
-
-
-
 

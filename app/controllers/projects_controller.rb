@@ -7,16 +7,17 @@ class ProjectsController < ApplicationController
 
 	def new
 		@project = Project.new
+		authorize @project
 	end
 
-	def show		
-		@project
-		@all_users = User.where.not(id: @project.users.ids, user_type: 'Manager')		
+	def show
+		authorize @project
+		@all_users = User.where.not(id: @project.users.ids, user_type: 'Manager')
 		@user_project = @project.user_projects.build
 	end
 
 	def edit
-		@project		
+		authorize @project
 	end
 
 	# def edit
@@ -24,10 +25,10 @@ class ProjectsController < ApplicationController
 	# end
 
 	def create
-		@project = current_user.projects.create(project_params)		
+		@project = current_user.projects.create(project_params)
 		if @project.save
 			redirect_to project_path(@project), notice: 'Project Savad'
-		else 
+		else
 			render 'new'
 		end
 	end
@@ -35,12 +36,13 @@ class ProjectsController < ApplicationController
 	def update
 		if @project.update(project_params)
 			redirect_to project_path(@project), notice: 'Project Updated'
-		else 
+		else
 			render 'edit'
 		end
-	end		
+	end
 
 	def destroy
+		authorize @project
 		@project.destroy
 		redirect_to projects_path(@project)
 	end

@@ -1,43 +1,65 @@
 
-Edit this before use
+<%= form_for @bug, :html => {:multipart => true}, url: url, local: true do |f| %>
 
-<%= form_for @student, url: url, local: true do |f| %>
-	  	 
-  <% if @student.errors.any? %>
+  <% if @bug.errors.any? %>
     <div id="error_explanation">
       <h2>
-        <%= pluralize(@student.errors.count, "error") %> prohibited
-        this school from being saved:
+        <%= pluralize(@bug.errors.count, "error") %> prohibited
+        this bug from being saved:
       </h2>
       <ul>
-        <% @student.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+        <% @bug.errors.full_messages.each do |msg| %>
+          <li> <%= msg %> </li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
   <p>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </p>
+  <div class="field">
+    <%= f.label :bug_type %>
+    <%= f.select :bug_type, ['Bug','Feature'] %>
+  </div><br/>
+
+  <div class="field">
+    <%= f.label :bug_status %>
+    <%= f.select :bug_status,['New', 'Started', 'Resolved'] %>
+  </div>
+  <p>
+    <%= f.label :deadline %>
+    <%= f.date_field :deadline %>
+  </p>
+  <p>
+    <%= f.label :screenshot %>
+    <%= f.file_field :screenshot %>
+  </p>
+  <div>
+   <%= f.hidden_field :user_id, value: current_user.id %>
+  </div>
+  <p>
+    <%= f.submit %>
   </p>
 
-  <p>
-    <%= f.label :std_class %>
-    <%= f.text_area :std_class %>    
-  </p>
-
-  <p>
-    <%= f.label :cgpa %>
-    <%= f.text_field :cgpa %>
-  </p>
-
-  <p>
-    <%= f.label :age %>
-    <%= f.text_field :age %>      
-  </p>
-
-  <p>
-    <%= f.submit %>      
-  </p>
 <% end %>
+
+
+
+<script>
+$(document).ready(function() {
+    $("#bug_bug_type").change(function() {
+        var val = $(this).val();
+        if (val == 'Bug') {
+            $("#bug_bug_status").html("<option value='test'>New</option><option value='test2'>Started</option><option value='test3'> Resolved</option>");
+        } else {
+            $("#bug_bug_status").html("<option value='test'>New</option><option value='test2'>Started</option><option value='test3'> Completed</option>");
+        }
+    });
+});
+
+</script>
+
+<br/>
+<%= link_to 'Back', project_bugs_path(@project) %>
