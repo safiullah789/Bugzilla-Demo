@@ -1,20 +1,17 @@
 class ProjectPolicy < ApplicationPolicy
   attr_reader :user, :project
 
-
   def initialize(user, project)
     @user = user
     @project = project
   end
 
-  def index?
-  	# @user.user_type != 'Developer'
-  end
+  # def index?
+  # end
 
   def new?
   	@user.user_type == 'Manager'
   end
-
 
   def show?
   	if @user.user_type == 'Developer'
@@ -25,6 +22,18 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   def edit?
+    if @user.user_type == 'Manager'
+      @project.users.include?(@user)
+    else
+      return false
+    end
+  end
+
+  def create?
+    @user.user_type == 'Manager'
+  end
+
+  def update?
     if @user.user_type == 'Manager'
       @project.users.include?(@user)
     else

@@ -16,7 +16,6 @@
 						:method => :delete %></td>
 		<% end %>
 	</tr>
-
 </table>
 
 <table cellspacing="5" cellpadding="5">
@@ -31,26 +30,26 @@
 				<td><%= user.name %></td>
 				<td><%= user.user_type %></td>
 				<td><%= user.email %></td>
-				<%  if policy(@project).remove_member? and user.id != current_user.id %>	
+				<%  if policy(@project).remove_member? and user.id != current_user.id %>
 				<td><%= link_to 'Remove User', remove_project_path(@project, user), data: {confirm: 'Are you sure?'},
 						:method => :delete %></td>
-				<%end %>	
+				<%end %>
 			</tr>
 		<% end %>
 </table>
 
-	<% if policy(@project).add_member?  %>
+	<% if policy(@project).add_member? and @all_users.present? %>
 		<%= form_for @project, url: {action: "add_member"} do |form| %>
 			<%= fields_for (@user_project) do |pb| %>
 				<div class="field">
 					<%= pb.label 'All Users' %>
-					<%= collection_select(:users, :id,  @all_users, :id, :name_and_type, {}, {multiple:  true}) %> 
+					<%= collection_select(:users, :id,  @all_users, :id, :name_and_type, {}, {multiple:  true}) %>
 				</div>
-			<% end %>		
+			<% end %>
 			<%=submit_tag "Add", :class => "submit"%>
 		<%end%>
 	<%end%>
-	
+
 
 <%= link_to 'Back', projects_path %>
 

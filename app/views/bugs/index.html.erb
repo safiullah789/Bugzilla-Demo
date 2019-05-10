@@ -1,15 +1,14 @@
 
 <h1> List of Bugs </h1>
 <table cellpadding="5">
+	<% if @bugs.present? %>
 	<tr>
 		<th> <h3> Bugs</h3> </th>
 	</tr>
-	<% if @bugs.present? %>
 		<% @bugs.each do |bug| %>
 				<tr>
 					<td><%= bug.title %> </td>
 			    <td><%= link_to 'Show Details', project_bug_path(@project, bug) if policy(bug).show? %></td>
-			    <td><%= link_to 'Assign Me', assign_project_bug_path(@project, bug), :method => :patch  if policy(bug).assign?%></td>
 					<td><%= link_to 'Edit', edit_project_bug_path(@project, bug) if policy(bug).edit? %></td>
 					<% if policy(bug).destroy? %>
 						<td><%= link_to 'Destroy', project_bug_path(@project, bug), data: {confirm: 'Are you sure?'},
@@ -17,6 +16,8 @@
           <% end %>
 				</tr>
 		<% end %>
+	<% else %>
+		<tr> <h3> No Bugs Yet </h3></tr>
 	<% end %>
 </table>
 

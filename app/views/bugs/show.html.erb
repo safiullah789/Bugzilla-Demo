@@ -27,15 +27,15 @@
         <% end %>
 
       <% else %>
-      <td> <%= @bug.bug_status %> </td>
+        <td> <%= @bug.bug_status %> </td>
       <% end %>
 
     <td><%= @bug.deadline %>   </td>
 
 		<% if @bug.dev_id? %>
-			<td><%= User.find(@bug.dev_id).name %>
+			<td><%= User.find(@bug.dev_id).name %></td>
 		<% else %>
-			<td>Un-Assigned </td>
+			<td id="id-assign">Un-Assigned </td>
 		<% end %>
 
 		<td><%= link_to 'Edit', edit_project_bug_path(@project, @bug) if policy(@bug).edit? %></td>
@@ -43,13 +43,39 @@
 			<td><%= link_to 'Destroy', project_bug_path(@project, @bug), data: {confirm: 'Are you sure?'},
    			                     :method => :delete %></td>
     <% end %>
-    <td><%= link_to 'Assign Me', assign_project_bug_path(@project, @bug), :method => :patch  if policy(@bug).assign?%></td>
 
-	 </tr>
+    <% if policy(@bug).assign? %>
+      <td id="assign_id" bug_id="<%=@bug.id%>" > <button onclick="callAssign();">Assign Me</button> </td>
+    <% end %>
+
+
+   </tr>
   </table>
 
 <h3> Screenshot </h3>
 <%= image_tag @bug.screenshot_url(:thumb) if @bug.screenshot? %> <br/><br/>
+
+<script>
+  function callAssign(){
+    var bug_id = $("#assign_id").attr("bug_id")
+    $.ajax({
+      type: "get",
+      url: bug_id+"/assign",
+      async: false,
+      success:function(response){
+        getData[dev]=response
+        $("#id-assign").text(getData[dev])
+        // alert(response["message"]);
+      },
+      error:function(response){
+        alert('error');
+      }
+    })
+  }
+
+</script>
+
+
 
 
 <script>

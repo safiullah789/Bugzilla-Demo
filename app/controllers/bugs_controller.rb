@@ -44,20 +44,34 @@ class BugsController < ApplicationController
     redirect_to project_bugs_path(@project)
   end
 
+  # def assign
+  #   authorize @bug
+  #   @bug.update_attribute(:dev_id,current_user.id)
+  #   redirect_to project_bug_path(@bug.project_id, @bug)
+  # end
+
   def assign
     authorize @bug
-    @bug.update_attribute(:dev_id,current_user.id)
-    redirect_to project_bug_path(@bug.project_id, @bug)
+    if @bug.update_attribute(:dev_id, current_user.id)
+      @dev = User.find_by(id: @bug.dev_id)
+     render json: {bug: @bug , dev: @dev.name}
+    else
+      render json: {"error": "Could not Assign"}
+    end
   end
+
 
   def edit_status
     authorize @bug
     if @bug.update_attribute(:bug_status, params[:data])
       render json: {"message": "Successfully Updated"}
     else
-      render json: {"erroe": "Could not update"}
+      render json: {"error": "Could not update"}
     end
   end
+
+
+
 
 
 

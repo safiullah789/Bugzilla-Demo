@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   	end
   	resources :bugs do
       member do
-         patch 'assign', to: 'bugs#assign'
+         get 'assign', to: 'bugs#assign'
     end
   end
   end
@@ -18,8 +18,7 @@ Rails.application.routes.draw do
 
 
 
- resources :welcome
-  root 'welcome#index'
+  root 'projects#index'
 
 
 end

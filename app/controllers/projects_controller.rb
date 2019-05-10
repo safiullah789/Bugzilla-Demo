@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
 	before_action :set_project, only: [:show, :edit, :update, :destroy, :add_member, :remove_member]
 
 	def index
-		@projects = Project.all
+			@projects = current_user.projects
 	end
 
 	def new
@@ -20,12 +20,9 @@ class ProjectsController < ApplicationController
 		authorize @project
 	end
 
-	# def edit
-	# 	@project = current_user.projects.find(params[:id]) where user can only edit his/her own projects
-	# end
-
 	def create
 		@project = current_user.projects.create(project_params)
+		authorize @project
 		if @project.save
 			redirect_to project_path(@project), notice: 'Project Savad'
 		else
@@ -34,6 +31,7 @@ class ProjectsController < ApplicationController
 	end
 
 	def update
+		authorize @project
 		if @project.update(project_params)
 			redirect_to project_path(@project), notice: 'Project Updated'
 		else
@@ -67,7 +65,6 @@ class ProjectsController < ApplicationController
 
 		def set_project
 			@project = Project.find_by(id: params[:id])
-			# // asda
 		end
 
 end

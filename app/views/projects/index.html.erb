@@ -5,7 +5,7 @@
 	<tr>
 		<th> Projects </th>
 	</tr>
-	<% if @projects.present? %>
+	<% if @projects.present?%>
 		<% @projects.each do |project| %>
 
 				<tr>
@@ -18,7 +18,9 @@
 					<% end %>
 				</tr>
 		<% end %>
+	<% else %>
+		<tr> <h3> No Project to show </h3></tr>
 	<% end %>
 </table>
 
-	<%= link_to 'Add new project', new_project_path if policy(Project).new? %>
+<%= link_to 'Add new project', new_project_path if policy(Project).new? %>

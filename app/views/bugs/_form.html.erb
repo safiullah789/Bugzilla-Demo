@@ -34,8 +34,9 @@
   </p>
   <p>
     <%= f.label :screenshot %>
-    <%= f.file_field :screenshot %>
+    <%= f.file_field :screenshot, accept: "image/png, image/gif" %>
   </p>
+
   <div>
    <%= f.hidden_field :user_id, value: current_user.id %>
   </div>
@@ -44,7 +45,6 @@
   </p>
 
 <% end %>
-
 
 
 <script>
